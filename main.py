@@ -6,9 +6,11 @@ Almacenamiento:
     - documentos: binario
 
 """
-import csv
-from unittest import case
 
+"""
+    nombre,apellido,fecha,registro
+"""
+import csv
 
 def opener(nombre,tipo_archivo, tipo_apertura):
     a_name = nombre + "." + tipo_archivo
@@ -42,8 +44,8 @@ class Vacunas:
         self.encargado = encargado
 
 class Documentos:
-    def __init__(self, ruta, nombre):
-        self.ruta = ruta
+    def __init__(self, extension, nombre):
+        self.extension = extension
         self.nombre = nombre
 
 
@@ -67,7 +69,7 @@ class Manager:
         try: #caso especial: no hay doc para vacunas, así que se crea así bien artesanal
             with opener("vacunas", "csv", "x") as o:
                 lector = csv.DictReader(o)
-                return
+                return False
         except Exception as e:
             pass
 
@@ -78,21 +80,40 @@ class Manager:
             for linea in lector:
                 vac = Vacunas(linea["nombre"], linea["fecha"], linea["proxima dosis"], linea["encargado"])
                 self.vacunas[linea[0]] = {vac}
+            return False
+
+
+    def guardar_vacunas(self):
+        if not self.vacunas:
+            return False
+        headers = ["nombre", "fecha", "proxima dosis", "encargado"]
+        with opener("vacunas", "csv", "w") as o:
+            escritor = csv.DictWriter(o, headers)
+            escritor.writeheader()
+            for vac in self.vacunas.values():
+                escritor.writerow(vac)
+            return True
 
 
     def cargar_documento(self, nombre, tipo):
         try:
             with opener(nombre, tipo, "rb") as o:
                 info = o.read()
-                return
+                self.documentos[nombre] = Documentos(tipo, nombre)
+                return True
         except:
             pass
         with opener(nombre, tipo, "wb") as o:
             info = o.read()
+            return False
 
 
+class Operador:
+    def __init__(self):
+        self.manejador = Manager()
 
-
+    def
+func = Operador()
 
 # ---------- MENÚ CHIDO ----------
 while True:
@@ -114,4 +135,3 @@ while True:
 
         case _:
             print("Opción inválida")
-
