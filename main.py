@@ -64,6 +64,14 @@ class Manager:
 
 
     def cargar_vacunas(self):
+        try: #caso especial: no hay doc para vacunas, así que se crea así bien artesanal
+            with opener("vacunas", "csv", "x") as o:
+                lector = csv.DictReader(o)
+                return
+        except Exception as e:
+            pass
+
+        # Ahora sí, se abre el doc vacunas
         with opener("vacunas", "csv", "r") as o:
             lector = csv.DictReader(o)
             next(lector)
@@ -72,9 +80,15 @@ class Manager:
                 self.vacunas[linea[0]] = {vac}
 
 
-    def cargar_documento(self, nombre):
-        with opener(nombre, "bin", "rb") as o:
+    def cargar_documento(self, nombre, tipo):
+        try:
+            with opener(nombre, tipo, "rb") as o:
+                info = o.read()
+                return
+        except:
             pass
+        with opener(nombre, tipo, "wb") as o:
+            info = o.read()
 
 
 
