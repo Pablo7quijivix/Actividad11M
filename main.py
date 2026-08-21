@@ -7,15 +7,18 @@ Almacenamiento:
 
 """
 import csv
+from unittest import case
+
+
 def opener(nombre,tipo_archivo, tipo_apertura):
     a_name = nombre + "." + tipo_archivo
     match tipo_archivo:
         case "csv":
-            return open("datos/"+a_name, tipo_apertura, newline="", encoding="utf-8")
+            return open(f"datos/{a_name}", tipo_apertura, newline="", encoding="utf-8")
         case "json":
-            return open("datos/"+a_name, tipo_apertura, enconding = "utf-8", indent = 4, ensure_ascii = False)
+            return open(f"datos/{a_name}", tipo_apertura, encoding = "utf-8", indent = 4, ensure_ascii = False)
         case "binario":
-            return open("documentos"+a_name, tipo_archivo)
+            return open(f"documentos/{a_name}", tipo_archivo)
         case _:
             return None
 
@@ -58,15 +61,43 @@ class Manager:
         self.cargar_mascotas()
         self.cargar_consultas()
         self.cargar_vacunas()
-        self.cargar_documentos()
+
 
     def cargar_vacunas(self):
         with opener("vacunas", "csv", "r") as o:
             lector = csv.DictReader(o)
             next(lector)
-            for linea in lector():
+            for linea in lector:
                 vac = Vacunas(linea["nombre"], linea["fecha"], linea["proxima dosis"], linea["encargado"])
                 self.vacunas[linea[0]] = {vac}
 
 
-    def cargar_documentos(self): pass
+    def cargar_documento(self, nombre):
+        with opener(nombre, "bin", "rb") as o:
+            pass
+
+
+
+
+
+# ---------- MENÚ CHIDO ----------
+while True:
+    print("----------SISTEMA VETERINARIA----------\n1. Registrar Mascota\n2. Mostrar mascotas\n3. Buscar mascota\n4. Registrar consulta\n5. Historial de consultas\n6. Registrar vacuna\n7. Consultar vacunas de una mascota\n8. Añadir archivo a mascota\n9. Resumen del sistema\n10. Salir")
+    select = input("Seleccione una opción: ")
+    match select:
+        case "1":pass
+        case "2":pass
+        case "3":pass
+        case "4":pass
+        case "5":pass
+        case "6":pass
+        case "7":pass
+        case "8":pass
+        case "9":pass
+        case "10":
+            print("Saliendo...")
+            break
+
+        case _:
+            print("Opción inválida")
+
